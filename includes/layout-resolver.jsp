@@ -26,17 +26,19 @@
 
 <%-- Activate the "custom" layout if exists --%>
 <%
-    if (config.getServletContext().getResource("extensions/layouts/custom/body.ser") != null) {
-        layout = "custom";
-    }
+    String relyingParty = request.getParameter("relyingParty"); 
+    String tenantDomain1 = request.getParameter("tenantDomain"); 
+    
+    if (config.getServletContext().getResource("extensions/layouts/"+tenantDomain1+"/body.ser") != null) {
+        layout = tenantDomain1;
+    } 
 %>
 
 <%-- Layout Resolving Part --%>
 <%
     String layoutFileRelativePath;
     Map<String, Object> layoutData = new HashMap<String, Object>();
-
-    if (!layout.equals("custom")) {
+    if (!layout.equals(tenantDomain1)) {
         if (layout.equals("default")) {
             layoutFileRelativePath = "includes/layouts/" + layout + "/body.ser";
         } else {
@@ -47,6 +49,6 @@
             }
         }
     } else {
-        layoutFileRelativePath = "extensions/layouts/custom/body.ser";
+        layoutFileRelativePath = "extensions/layouts/"+tenantDomain1+"/body.ser";
     }
 %>
