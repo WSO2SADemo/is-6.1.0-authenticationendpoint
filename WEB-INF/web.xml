@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-  ~ Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
   ~ WSO2 Inc. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
@@ -50,10 +52,6 @@
     <!-- *************** End of Global configurations ********************** -->
 
     <!-- *************** Account Recovery Endpoint Context URL Configuration ********************** -->
-    <!--context-param>
-       <param-name>IdentityManagementEndpointContextURL</param-name>
-       <param-value>https://localhost:9443/accountrecoveryendpoint</param-value>
-   </context-param-->
     <context-param>
        <param-name>AccountRecoveryRESTEndpointURL</param-name>
        <param-value>/t/tenant-domain/api/identity/user/v1.0/</param-value>
@@ -66,33 +64,39 @@
         <param-name>EnableSelfSignUpEndpoint</param-name>
         <param-value>true</param-value>
     </context-param-->
-    <!--context-param>
-        <param-name>AccountRegisterEndpointURL</param-name>
-        <param-value>https://localhost:9443/accountrecoveryendpoint/register.do</param-value>
-    </context-param-->
+
+
+    <!-- *************** My Account URL ********************** -->
+
+
     <!-- *************** End of Account Recovery Endpoint Context URL Configuration ********************** -->
     <!-- *************** Identity Server Endpoint URL Configuration ********************** -->
-    <!--context-param>
-        <param-name>IdentityServerEndpointContextURL</param-name>
-        <param-value>https://localhost:9443</param-value>
-    </context-param-->
     <!-- *************** End of Identity Server Endpoint URL Configuration ********************** -->
     <!--context-param>
         <param-name>EnableAuthenticationWithAuthenticationRESTAPI</param-name>
         <param-value>true</param-value>
     </context-param-->
+
     <!-- *************** Authentication REST API URL Configuration ********************** -->
-    <!--context-param>
-        <param-name>AuthenticationRESTEndpointURL</param-name>
-        <param-value>https://localhost:9443/api/identity/auth/v1.1/</param-value>
-    </context-param-->
     <!-- *************** End of Authentication REST API URL Configuration ********************** -->
+
+    <!-- *************** ToS URL Configuration ********************** -->
+    <!-- *************** End of ToS URL Configuration ********************** -->
+
+    <!-- *************** Privacy Policy URL Configuration ********************** -->
+    <!-- *************** End of Privacy Policy URL Configuration ********************** -->
 
     <!--Display scopes in the consent page.-->
     <context-param>
         <param-name>displayScopes</param-name>
         <param-value>true</param-value>
     </context-param>
+
+    <!-- *************** Authentication Portal Context Parameters ********************** -->
+    <!-- *************** End of Authentication Portal Context Parameters ********************** -->
+
+    <!-- *************** Layout Store URL Configuration ********************** -->
+    <!-- *************** End of Layout Store URL Configuration ********************** -->
 
     <filter>
         <filter-name>HttpHeaderSecurityFilter</filter-name>
@@ -106,6 +110,20 @@
     <filter-mapping>
         <filter-name>HttpHeaderSecurityFilter</filter-name>
         <url-pattern>*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AuthenticationParameterFilter</filter-name>
+        <filter-class>
+            org.wso2.carbon.identity.application.authentication.endpoint.util.filter.AuthParameterFilter
+        </filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AuthenticationParameterFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <filter>
@@ -129,7 +147,7 @@
         </filter-class>
         <init-param>
            <param-name>patterns</param-name>
-           <param-value>"text/html" ,"application/json" ,"plain/text"</param-value>
+           <param-value>"text/html.*" ,"application/json" ,"plain/text"</param-value>
         </init-param>
         <init-param>
            <param-name>filterAction</param-name>
@@ -145,7 +163,9 @@
 
     <filter-mapping>
         <filter-name>ContentTypeBasedCachePreventionFilter</filter-name>
-        <url-pattern>*</url-pattern>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
 
     <listener>
@@ -352,6 +372,7 @@
         <jsp-file>/smsOtpError.jsp</jsp-file>
     </servlet>
 
+
     <servlet>
         <servlet-name>magic_link_notification.do</servlet-name>
         <jsp-file>/magic_link_notification.jsp</jsp-file>
@@ -371,7 +392,7 @@
         <servlet-name>select_org.do</servlet-name>
         <jsp-file>/select_org.jsp</jsp-file>
     </servlet>
-
+    
     <servlet-mapping>
         <servlet-name>totp_enroll.do</servlet-name>
         <url-pattern>/totp_enroll.do</url-pattern>
