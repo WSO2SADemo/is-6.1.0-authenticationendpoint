@@ -18,6 +18,7 @@
 
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="java.net.URLDecoder" %>
 
 <%-- Change the layout name to activate another layout --%>
 <%
@@ -28,9 +29,13 @@
 <%
     String relyingParty = request.getParameter("relyingParty"); 
     String tenantDomain1 = request.getParameter("tenantDomain"); 
-    
-    if (config.getServletContext().getResource("extensions/layouts/"+tenantDomain1+"/body.ser") != null) {
-        layout = tenantDomain1;
+    String callingTenant = tenantDomain1;
+    if (tenantDomain1.equals("carbon.super")) {
+        String[] stateValues = URLDecoder.decode(request.getParameter("state"), "UTF-8").split("=");
+        callingTenant = stateValues[1];
+    }     
+    if (config.getServletContext().getResource("extensions/layouts/"+callingTenant+"/body.ser") != null) {
+        layout = callingTenant;
     } 
 %>
 
