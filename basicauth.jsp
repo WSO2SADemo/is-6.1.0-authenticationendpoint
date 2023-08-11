@@ -69,6 +69,16 @@
 
     // Handle form submission preventing double submission.
     $(document).ready(function(){
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        var callingTenant = "";
+        if (urlParams.get('tenantDomain') == "carbon.super") {
+            var stateValues = decodeURI(urlParams.get('state')).split("=");
+            callingTenant = stateValues[1];
+            if (callingTenant == "carbon.super") {
+                callingTenant = "";
+            }
+        }
         $.fn.preventDoubleSubmission = function() {
             $(this).on('submit',function(e){
                 var $form = $(this);
@@ -121,6 +131,15 @@
             return this;
         };
         $('#loginForm').preventDoubleSubmission();
+        $('#usernamewithoutdomain').on("change", (event) => {
+                const usernameElement = document.getElementById("username");
+                if (callingTenant != null && callingTenant != "") {
+                    usernameElement.value = event.target.value + "@" + callingTenant;
+                } else {
+                    usernameElement.value = event.target.value;
+                }
+            }
+        );
     });
 
 </script>
@@ -307,11 +326,22 @@
         <div class="field">
             <div class="ui fluid left icon input">
                 <input
-                    type="text"
+                    type="hidden"
                     id="username"
                     value=""
                     name="username"
-                    placeholder="<%=AuthenticationEndpointUtil.i18n(resourceBundle, usernameLabel)%>"
+                    tabindex="1"
+                    placeholder="<%=AuthenticationEndpointUtil.i18n(resourceBundle, "username")%>"
+                    data-testid="login-page-username-input"
+                    required>
+                <i aria-hidden="true" class="user icon"></i>
+                <input
+                    type="text"
+                    id="usernamewithoutdomain"
+                    value=""
+                    name="usernamewithoutdomain"
+                    tabindex="1"
+                    placeholder="<%=AuthenticationEndpointUtil.i18n(resourceBundle, "username")%>"
                     data-testid="login-page-username-input"
                     required>
                 <i aria-hidden="true" class="user icon"></i>
