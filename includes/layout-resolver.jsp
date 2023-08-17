@@ -29,10 +29,12 @@
 <%
     String relyingParty = request.getParameter("relyingParty"); 
     String tenantDomain1 = request.getParameter("tenantDomain"); 
-    String callingTenant = tenantDomain1;
+    String callingTenant = tenantDomain1;    
     if (tenantDomain1.equals("carbon.super")) {
-        String[] stateValues = URLDecoder.decode(request.getParameter("state"), "UTF-8").split("=");
-        callingTenant = stateValues[1];
+        if (request.getParameter("state") != null && !request.getParameter("state").equals("")) {
+            String[] stateValues = URLDecoder.decode(request.getParameter("state"), "UTF-8").split("=");
+            callingTenant = stateValues[1];
+        }
     }     
     if (config.getServletContext().getResource("extensions/layouts/"+callingTenant+"/body.ser") != null) {
         layout = callingTenant;

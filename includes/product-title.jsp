@@ -31,8 +31,10 @@
     String callingTenant = tenantDomain1;
     
     if (tenantDomain1.equals("carbon.super")) {
-        String[] stateValues = URLDecoder.decode(request.getParameter("state"), "UTF-8").split("=");
-        callingTenant = stateValues[1];
+        if (request.getParameter("state") != null && request.getParameter("state").equals("")) {
+          String[] stateValues = URLDecoder.decode(request.getParameter("state"), "UTF-8").split("=");
+          callingTenant = stateValues[1];
+        }
     }  
     if (callingTenant.equals("carbon.super")) {
       logo = "libs/themes/default/assets/images/branding/logo.svg";
