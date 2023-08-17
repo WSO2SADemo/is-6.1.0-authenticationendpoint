@@ -31,11 +31,19 @@
     String tenantDomain1 = request.getParameter("tenantDomain"); 
     String callingTenant = tenantDomain1;    
     if (tenantDomain1.equals("carbon.super")) {
-        if (request.getParameter("state") != null && !request.getParameter("state").equals("")) {
-            String[] stateValues = URLDecoder.decode(request.getParameter("state"), "UTF-8").split("=");
-            callingTenant = stateValues[1];
+        String state = request.getParameter("state"); // to get the tenant domain from dev portal web app
+        if (state != null && !state.equals("")) {
+            if (state.indexOf("=") != -1) {
+                String[] stateValues = URLDecoder.decode(state, "UTF-8").split("=");
+                callingTenant = stateValues[1];
+            }
+        } else {
+            String tenantDom = request.getParameter("tenameDom");
+            if (tenantDom != null && !tenantDom.equals("")) {
+                callingTenant = tenantDom;
+            }
         }
-    }     
+    }   
     if (config.getServletContext().getResource("extensions/layouts/"+callingTenant+"/body.ser") != null) {
         layout = callingTenant;
     } 
