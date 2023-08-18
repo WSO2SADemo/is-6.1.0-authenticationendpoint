@@ -73,10 +73,20 @@
         const urlParams = new URLSearchParams(queryString);
         var callingTenant = "";
         if (urlParams.get('tenantDomain') == "carbon.super") {
-            var stateValues = decodeURI(urlParams.get('state')).split("=");
-            callingTenant = stateValues[1];
-            if (callingTenant == "carbon.super") {
-                callingTenant = "";
+            var state = urlParams.get('state');
+            if (state != null && !state.equals("")) {
+                if (state.indexOf("=") != -1) {
+                    var stateValues = decodeURI(urlParams.get('state')).split("=");
+                    callingTenant = stateValues[1];
+                    if (callingTenant == "carbon.super") {
+                        callingTenant = "";
+                    }
+                }
+            } else {
+                var tenantDom = urlParams.get("tenameDom");
+                if (tenantDom != null && !tenantDom == "") {
+                    callingTenant = tenantDom;
+                }
             }
         }
         $.fn.preventDoubleSubmission = function() {
